@@ -3,26 +3,29 @@ import requests
 import streamlit as st
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 import re
 from PIL import Image
 from io import BytesIO
 import json
 import time
+import os
+
+# Carrega as variáveis de ambiente do arquivo .env
+load_dotenv()
 
 # Configurações do Telegram
-bot_token = '7722332205:AAGQHbd_VOCdKiqli6eh-HpnS07APZTK83w'
-chat_id = '-1002218221761'
+bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
+chat_id = os.getenv('TELEGRAM_CHAT_ID')
 
 # Configuração do Reddit
 reddit = praw.Reddit(
     user_agent=True,
-    client_id='lnZVbq0GY7B6C2Jm4DIU0Q',
-    client_secret='LBb-1aLJ3TUNP8LOxUlzHJHcTTu-Xw',
-    username='Stock_Might396',
-    password='Voidka123'
+    client_id=os.getenv('REDDIT_CLIENT_ID'),
+    client_secret=os.getenv('REDDIT_CLIENT_SECRET'),
+    username=os.getenv('REDDIT_USERNAME'),
+    password=os.getenv('REDDIT_PASSWORD')
 )
-
 
 def is_valid_image_url(url):
     """Verifica se a URL é uma imagem válida e acessível."""
@@ -150,7 +153,7 @@ prompt = ChatPromptTemplate.from_messages([("system", system), ("human", human_t
 chat = ChatGroq(
     temperature=0.2,
     model_name="llama-3.2-90b-vision-preview",
-    groq_api_key="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"
+    groq_api_key=os.getenv('GROQ_API_KEY')
 )
 chain = prompt | chat
 
